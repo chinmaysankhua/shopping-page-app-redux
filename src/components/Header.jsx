@@ -1,8 +1,12 @@
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { toggleCart } from "../store/cartSlice";
 
 const Header = () => {
   const dispatch = useDispatch();
+
+  const totalQuantity = useSelector(
+    (state) => state.cart.totalQuantity
+  );
 
   const cartHandler = () => {
     dispatch(toggleCart());
@@ -14,7 +18,7 @@ const Header = () => {
 
       <button onClick={cartHandler}>
         My Cart
-        <span>1</span>
+        <span>{totalQuantity}</span>
       </button>
     </header>
   );

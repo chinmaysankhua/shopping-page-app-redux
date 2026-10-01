@@ -9,7 +9,9 @@ const App = () => {
 
       <Cart />
 
-      <h2 className="products-title">BUY YOUR FAVORITE PRODUCTS</h2>
+      <h2 className="products-title">
+        BUY YOUR FAVORITE PRODUCTS
+      </h2>
 
       <Product />
     </>

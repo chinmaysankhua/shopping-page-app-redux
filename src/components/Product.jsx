@@ -1,13 +1,31 @@
+import { useDispatch } from "react-redux";
+import { addItem } from "../store/cartSlice";
+
 const Product = () => {
+  const dispatch = useDispatch();
+
+  const product = {
+    id: 1,
+    title: "Test",
+    price: 6,
+    description: "This is a first product - amazing!",
+  };
+
+  const addToCartHandler = () => {
+    dispatch(addItem(product));
+  };
+
   return (
     <div className="product">
-      <h2>Test</h2>
+      <h2>{product.title}</h2>
 
-      <p>This is a first product - amazing!</p>
+      <p>{product.description}</p>
 
-      <button>Add to Cart</button>
+      <span>${product.price.toFixed(2)}</span>
 
-      <span>$6.00</span>
+      <button onClick={addToCartHandler}>
+        Add to Cart
+      </button>
     </div>
   );
 };
