@@ -12,12 +12,10 @@ const cartSlice = createSlice({
   initialState,
 
   reducers: {
-    // Show / hide cart
     toggleCart(state) {
       state.isVisible = !state.isVisible;
     },
 
-    // Add product to cart
     addItem(state, action) {
       const newItem = action.payload;
 
@@ -37,7 +35,6 @@ const cartSlice = createSlice({
       state.totalQuantity++;
     },
 
-    // Remove one quantity
     removeItem(state, action) {
       const id = action.payload;
 
@@ -52,12 +49,17 @@ const cartSlice = createSlice({
       existingItem.quantity--;
       state.totalQuantity--;
 
-      // If quantity becomes 0, remove product completely
       if (existingItem.quantity === 0) {
         state.items = state.items.filter(
           (item) => item.id !== id
         );
       }
+    },
+
+    // Used when loading the cart from Firebase
+    setCart(state, action) {
+      state.items = action.payload.items || [];
+      state.totalQuantity = action.payload.totalQuantity || 0;
     },
   },
 });
@@ -66,6 +68,7 @@ export const {
   toggleCart,
   addItem,
   removeItem,
+  setCart,
 } = cartSlice.actions;
 
 export default cartSlice.reducer;

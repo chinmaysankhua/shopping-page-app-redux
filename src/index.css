@@ -148,3 +148,36 @@ header button span {
   min-width: 40px;
   text-align: center;
 }
+
+/* notification */
+
+.notification {
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 55px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 100px;
+
+  color: white;
+
+  z-index: 1000;
+}
+
+.notification.sending {
+  background: #168fc4;
+}
+
+.notification.success {
+  background: #20d6a3;
+}
+
+.notification.error {
+  background: #d50000;
+}
