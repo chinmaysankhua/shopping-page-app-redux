@@ -1,4 +1,5 @@
 import { useDispatch } from "react-redux";
+
 import { addItem } from "../store/cartSlice";
 
 const Product = () => {
@@ -8,7 +9,8 @@ const Product = () => {
     id: 1,
     title: "Test",
     price: 6,
-    description: "This is a first product - amazing!",
+    description:
+      "This is a first product - amazing!",
   };
 
   const addToCartHandler = () => {
@@ -21,7 +23,9 @@ const Product = () => {
 
       <p>{product.description}</p>
 
-      <span>${product.price.toFixed(2)}</span>
+      <span>
+        ${product.price.toFixed(2)}
+      </span>
 
       <button onClick={addToCartHandler}>
         Add to Cart

@@ -1,27 +1,44 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+
 import { useDispatch, useSelector } from "react-redux";
 
 import Header from "./components/Header";
 import Cart from "./components/Cart";
 import Product from "./components/Product";
 import Notification from "./components/Notification";
-
-import { setCart } from "./store/cartSlice";
-
 import {
-  fetchCart,
-  saveCart,
-} from "./firebaseCart";
+  setCart,
+  sendCartData,
+  clearNotification,
+} from "./store/cartSlice";
+
+
+import { fetchCart } from "./firebaseCart";
 
 const App = () => {
   const dispatch = useDispatch();
 
-  const cart = useSelector((state) => state.cart);
+  // --------------------------------
+  // REDUX STATE
+  // --------------------------------
 
-  const [status, setStatus] = useState(null);
-  const [cartLoaded, setCartLoaded] = useState(false);
+  const cart = useSelector(
+    (state) => state.cart
+  );
 
-  // Load cart from Firebase when app starts
+  // --------------------------------
+  // LOCAL STATE
+  // --------------------------------
+
+  const [cartLoaded, setCartLoaded] =
+    useState(false);
+
+  const initialLoad = useRef(true);
+
+  // --------------------------------
+  // LOAD CART FROM FIREBASE
+  // --------------------------------
+
   useEffect(() => {
     const loadCart = async () => {
       try {
@@ -31,13 +48,10 @@ const App = () => {
           dispatch(setCart(data));
         }
       } catch (error) {
-        console.error(error);
-
-        setStatus("error");
-
-        setTimeout(() => {
-          setStatus(null);
-        }, 3000);
+        console.error(
+          "Failed to load cart:",
+          error
+        );
       } finally {
         setCartLoaded(true);
       }
@@ -46,44 +60,43 @@ const App = () => {
     loadCart();
   }, [dispatch]);
 
-  // Save cart whenever Redux cart changes
+  // --------------------------------
+  // SEND CART TO FIREBASE
+  // --------------------------------
+
   useEffect(() => {
+    // Don't send before Firebase cart
+    // has been loaded.
     if (!cartLoaded) {
       return;
     }
 
-    const sendCartData = async () => {
-      setStatus("sending");
+    // Don't send the cart immediately
+    // after the initial Firebase load.
+    if (initialLoad.current) {
+      initialLoad.current = false;
+      return;
+    }
 
-      try {
-        await saveCart(cart);
-
-        setStatus("success");
-
-        setTimeout(() => {
-          setStatus(null);
-        }, 2000);
-      } catch (error) {
-        console.error(error);
-
-        setStatus("error");
-
-        setTimeout(() => {
-          setStatus(null);
-        }, 3000);
-      }
-    };
-
-    sendCartData();
+    dispatch(sendCartData(cart));
   }, [
     cart.items,
     cart.totalQuantity,
     cartLoaded,
+    dispatch,
   ]);
+
+  // --------------------------------
+  // UI
+  // --------------------------------
 
   return (
     <>
-      <Notification status={status} />
+     <Notification
+  status={cart.notification.status}
+  message={cart.notification.message}
+  onClear={() => dispatch(clearNotification())}
+/>
 
       <Header />
 

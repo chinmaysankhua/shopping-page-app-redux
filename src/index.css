@@ -150,9 +150,9 @@ header button span {
 }
 
 /* notification */
-
 .notification {
   position: fixed;
+
   top: 0;
   left: 0;
 
@@ -170,7 +170,7 @@ header button span {
   z-index: 1000;
 }
 
-.notification.sending {
+.notification.pending {
   background: #168fc4;
 }
 

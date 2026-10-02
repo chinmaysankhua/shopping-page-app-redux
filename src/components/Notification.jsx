@@ -1,32 +1,35 @@
-const Notification = ({ status }) => {
-  if (status === "sending") {
-    return (
-      <div className="notification sending">
-        <strong>Sending...</strong>
-        <span>Sending cart data!</span>
-      </div>
-    );
+import { useEffect } from "react";
+
+const Notification = ({ status, message, onClear }) => {
+  useEffect(() => {
+    if (!status) {
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      onClear();
+    }, 3000);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [status, onClear]);
+
+  if (!status) {
+    return null;
   }
 
-  if (status === "success") {
-    return (
-      <div className="notification success">
-        <strong>Success!</strong>
-        <span>Sent cart data successfully!</span>
-      </div>
-    );
-  }
+  return (
+    <div className={`notification ${status}`}>
+      <strong>
+        {status === "pending" && "Sending..."}
+        {status === "success" && "Success!"}
+        {status === "error" && "Error!"}
+      </strong>
 
-  if (status === "error") {
-    return (
-      <div className="notification error">
-        <strong>Error!</strong>
-        <span>Sending cart data failed!</span>
-      </div>
-    );
-  }
-
-  return null;
+      <span>{message}</span>
+    </div>
+  );
 };
 
 export default Notification;
